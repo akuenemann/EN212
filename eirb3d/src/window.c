@@ -1,4 +1,6 @@
-﻿#include "window.h"
+﻿#include <math.h>
+
+#include "window.h"
 #include "geometry.h"
 #include "model.h"
 #include "vector.h"
@@ -118,7 +120,7 @@ void WindowUpdate( window_t * w ) {
 
 void WindowDrawPoint( window_t * w, int x, int y, Uint8 r, Uint8 g, Uint8 b ) {
 	Uint32 * dst = (Uint32*)w->framebuffer + y * w->width + x;
-	*dst = (0xFF << 24) | (r << 16) | ( g << 8) | b;
+	*dst = (0x1F << 24) | (r << 16) | ( g << 8) | b;
 }
 
 void WindowDrawClearColor( window_t * w, Uint8 r, Uint8 g, Uint8 b ) {
@@ -130,12 +132,56 @@ void WindowDrawClearColor( window_t * w, Uint8 r, Uint8 g, Uint8 b ) {
 }
 
 void WindowDrawLine( window_t * w, int x0, int y0, int x1, int y1, Uint8 r, Uint8 g, Uint8 b ) {
+
+
+  int dx,dy,i,x0nc,y0nc,cumul,x,y ;
+  x = x0 ;
+  y = y0 ;
+  dx = x1 - x0 ;
+  dy = y1 - y0 ;
+  x0nc = ( dx > 0 ) ? 1 : -1 ;
+  y0nc = ( dy > 0 ) ? 1 : -1 ;
+  dx = abs(dx) ;
+  dy = abs(dy) ;
+  WindowDrawPoint(w, x, y, r, g, b);
+  if ( dx > dy ) {
+    cumul = dx / 2 ;
+    for ( i = 1 ; i <= dx ; i++ ) {
+      x += x0nc ;
+      cumul += dy ;
+      if ( cumul >= dx ) {
+        cumul -= dx ;
+        y += y0nc ; }
+      WindowDrawPoint(w, x, y, r, g, b); } }
+    else {
+    cumul = dy / 2 ;
+    for ( i = 1 ; i <= dy ; i++ ) {
+      y += y0nc ;
+      cumul += dx ;
+      if ( cumul >= dy ) {
+        cumul -= dy ;
+        x += x0nc ; }
+      WindowDrawPoint(w, x, y, r, g, b); } }
+
+
+
+
+
+/*
+
 	bool s = false;
 	if ( (x1 - x0) == 0.0f ){
 		int miny = MIN(y0, y1);
 		int maxy = MAX(y0, y1);
 		for (int y_courant = miny ; y_courant < maxy ; y_courant++){
 			WindowDrawPoint(w, x0, y_courant, r, g, b);
+		}
+	}
+	else if ( (y1 - y0) == 0.0f ){
+		int minx = MIN(x0, x1);
+		int maxx = MAX(x0, x1);
+		for (int x_courant = minx ; x_courant < maxx ; x_courant++){
+			WindowDrawPoint(w, x_courant, y0, r, g, b);
 		}
 	}
 	else{
@@ -160,20 +206,207 @@ void WindowDrawLine( window_t * w, int x0, int y0, int x1, int y1, Uint8 r, Uint
 				WindowDrawPoint(w, x_courant, y_courant, r, g, b);
 			}
 		}
-	}
+	}*/
 	
 }
 
 void WindowDrawTriangle( window_t * w, int idx ) { 
-		face_t * face = (face_t*) VectorGetFromIdx( ModelFaces(), idx );
-		vec3f_t *s1 = (vec3f_t*) VectorGetFromIdx(ModelVertices(), face->v[0]-1);
-		vec3f_t *s2 = (vec3f_t*) VectorGetFromIdx(ModelVertices(), face->v[1]-1);
-		vec3f_t *s3 = (vec3f_t*) VectorGetFromIdx(ModelVertices(), face->v[2]-1);
-		
-		WindowDrawLine(w, (int) (s1->x+1)*w->width, (int) (s1->y+1)*w->height, (int) (s2->x+1)*w->width, (int) (s2->y+1)*w->height, 200, 200, 200);
-		//WindowDrawLine(w, (int) s3->x, (int) s3->y, (int) s2->x, (int) s2->y, 200, 200, 200);
-		//WindowDrawLine(w, (int) s1->x, (int) s1->y, (int) s3->x, (int) s3->y, 200, 200, 200);
+	face_t * face = (face_t*) VectorGetFromIdx( ModelFaces(), idx );
+	vec3f_t *s1 = (vec3f_t*) VectorGetFromIdx(ModelVertices(), face->v[0]-1);
+	vec3f_t *s2 = (vec3f_t*) VectorGetFromIdx(ModelVertices(), face->v[1]-1);
+	vec3f_t *s3 = (vec3f_t*) VectorGetFromIdx(ModelVertices(), face->v[2]-1);
+	
+	int x1 = (int) ((s1->x+1)*w->width/2);
+	int y1 = (int) (w->height - (s1->y+1)*w->height/2);
+	int z1 = (int) ((s1->z+1));
+	int x2 = (int) ((s2->x+1)*w->width/2);
+	int y2 = (int) (w->height - (s2->y+1)*w->height/2);
+	int z2 = (int) ((s2->z+1));
+	int x3 = (int) ((s3->x+1)*w->width/2);
+	int y3 = (int) (w->height - (s3->y+1)*w->height/2);
+	int z3 = (int) ((s3->z+1));
 
+/*
+	int x1 = 500;
+	int y1 = 200;
+	int x2 = 150;
+	int y2 = 300;
+	int x3 = 150;
+	int y3 = 100;
+*/
+	//WindowDrawLine(w, x1, y1, x2, y2, 200, 200, 200);
+	//WindowDrawLine(w, x3, y3, x2, y2, 200, 200, 200);
+	//WindowDrawLine(w, x1, y1, x3, y3, 200, 200, 200);
+
+
+	int tmpy;
+	int tmpx;
+	if(y1 > y3){
+		if(y1 > y2){
+			if(y2 > y3){
+				tmpx = x3;
+				tmpy = y3;
+				y3 = y1;
+				x3 = x1;
+				y1 = tmpy;
+				x1 = tmpx;
+			}
+			else{	
+				tmpx = x3;
+				tmpy = y3;
+				y3 = y1;
+				x3 = x1;
+				y1 = y2;
+				x1 = x2;
+				y2 = tmpy;
+				x2 = tmpx;
+			}
+		}
+		else{
+			tmpx = x3;
+			tmpy = y3;
+			y3 = y2;
+			x3 = x2;
+			y2 = y1;
+			x2 = x1;
+			y1 = tmpy;
+			x1 = tmpx;
+		}
+	}
+	else{
+		if(y3 < y2){
+			tmpx = x3;
+			tmpy = y3;
+			y3 = y2;
+			x3 = x2;
+			y2 = tmpy;
+			x2 = tmpx;
+		}
+		else if(y1 > y2){
+			tmpx = x2;
+			tmpy = y2;
+			y2 = y1;
+			x2 = x1;
+			y1 = tmpy;
+			x1 = tmpx;
+		}
+	}
+
+	//printf("x1 = %d, x2 = %d, x3 = %d\ny1 = %d, y2 = %d, y3 = %d\n", x1, x2 ,x3, y1, y2, y3);
+
+float coef1 = 0;
+float offset1 = 0;
+
+float coef2 = 0;
+float offset2 = 0;
+
+float coef3 = 0;
+float offset3 = 0;
+
+bool c1 = false;
+bool c2 = false;
+bool c3 = false;
+
+int lumiere[] = {0,0,1};
+
+vec3f_t prod_vect = Vec3fNormalize(Vec3fCross( *s1, *s2 ));
+
+float intensite = prod_vect.x*lumiere[0]+prod_vect.y*lumiere[1]+prod_vect.z*lumiere[2];
+
+
+int couleur_r;
+
+if (intensite < 0){
+	couleur_r = 0;
+}
+else{
+	couleur_r = intensite*255;
+}
+int couleur_b = couleur_r;
+int couleur_g = couleur_r;
+
+
+if (!((x1 == x3) || (y1 == y3))){
+	coef1 = (y3 - y1)/(float)(x3 - x1);
+	offset1 = y1 - coef1 * x1;
+	c1 = true;
+}
+if(!((x2 == x1) || (y2 == y1))){
+	coef2 = (y2 - y1)/(float)(x2 - x1);
+	offset2 = y1 - coef2 * x1;
+	c2 = true;
+}
+if(!((x2 == x3) || (y2 == y3))){
+	c3 = true;
+	coef3 = (y3 - y2)/(float)(x3 - x2);
+	offset3 = y2 - coef3 * x2;
+}
+
+//printf("%f %f %f\n", coef1, coef2, coef3);
+//printf("%d %d %d\n", c1, c2, c3);
+
+
+
+
+
+for (int y = y1; y <= y2; y++){
+	if ((c1 == false) && (c2 == false)){
+		WindowDrawPoint(w, x1, y, 255, 0, 0);
+	} 
+	else if(c1 == false){
+		if (x1 < x2){
+			WindowDrawLine(w, x1, y, (int)((y - offset2)/coef2), y, couleur_r, couleur_g, couleur_b);
+		}
+		else{
+			WindowDrawLine(w, (int)((y - offset2)/coef2), y, x1, y, couleur_r, couleur_g, couleur_b);
+		}
+	}
+	else if(c2 == false){
+		if(x1 < x2){
+			WindowDrawLine(w, (int)((y - offset1)/coef1), y, x2, y, couleur_r, couleur_g, couleur_b);
+		}
+		else{
+			WindowDrawLine(w, x2, y, (int)((y - offset1)/coef1), y, couleur_r, couleur_g, couleur_b);
+		}
+	}
+	else{
+		if(x1 > x2){
+			WindowDrawLine(w, (int)((y - offset2)/coef2), y, (int)((y - offset1)/coef1), y, couleur_r, couleur_g, couleur_b);
+		}
+		else{
+			WindowDrawLine(w, (int)((y - offset1)/coef1), y, (int)((y - offset2)/coef2), y, couleur_r, couleur_g, couleur_b);
+		}
+	}
+}
+for (int y = y2; y <= y3; y++){
+	if ((c1 == false) && (c3 == false)){
+		WindowDrawPoint(w, x1, y, couleur_r, couleur_g, couleur_b);
+	} 
+	else if(c1 == false){
+		if (x1 < x3) {
+			WindowDrawLine(w, x1, y, (int)((y - offset3)/coef3), y, couleur_r, couleur_g, couleur_b);
+		}
+		else {
+			WindowDrawLine(w, (int)((y - offset3)/coef3), y, x1, y, couleur_r, couleur_g, couleur_b);
+		}
+	}
+	else if(c3 == false){
+		if (x1 < x3){
+			WindowDrawLine(w, (int)((y - offset1)/coef1), y, x2, y, couleur_r, couleur_g, couleur_b);
+		}
+		else{
+			WindowDrawLine(w, x2, y, (int)((y - offset1)/coef1), y, couleur_r, couleur_g, couleur_b);
+		}
+	}
+	else{
+		if (x1 < x3){
+			WindowDrawLine(w, (int)((y - offset1)/coef1), y, (int)((y - offset3)/coef3), y, couleur_r, couleur_g, couleur_b);
+		}
+		else{
+			WindowDrawLine(w, (int)((y - offset3)/coef3), y, (int)((y - offset1)/coef1), y, couleur_r, couleur_g, couleur_b);
+		}
+	} 
+}
 }
 
 

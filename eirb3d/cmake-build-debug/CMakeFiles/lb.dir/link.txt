@@ -1,0 +1,2 @@
+C:\MinGw\bin\ar.exe qc liblb.a  CMakeFiles/lb.dir/src/events.c.obj CMakeFiles/lb.dir/src/geometry.c.obj CMakeFiles/lb.dir/src/model.c.obj CMakeFiles/lb.dir/src/vector.c.obj CMakeFiles/lb.dir/src/window.c.obj
+C:\MinGw\bin\ranlib.exe liblb.a

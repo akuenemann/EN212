@@ -1,0 +1,4 @@
+"C:\Program Files\JetBrains\CLion 2017.1.1\bin\cmake\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - MinGW Makefiles" C:\Users\Anthony\Documents\Cours\Inge\S8\EN212\EN212\eirb3d
+-- Configuring done
+-- Generating done
+-- Build files have been written to: C:/Users/Anthony/Documents/Cours/Inge/S8/EN212/EN212/eirb3d/cmake-build-debug
