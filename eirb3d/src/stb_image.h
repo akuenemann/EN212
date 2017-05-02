@@ -1585,12 +1585,12 @@ typedef uint8 *(*resample_row_func)(uint8 *out, uint8 *in0, uint8 *in1,
 
 #define div4(x) ((uint8) ((x) >> 2))
 
-static uint8 *resample_row_1(uint8 * out, uint8 *in_near, uint8 * in_far, int w, int hs)
+static uint8 *resample_row_1(uint8 * /*out*/, uint8 *in_near, uint8 * /*in_far*/, int /*w*/, int /*hs*/)
 {
    return in_near;
 }
 
-static uint8* resample_row_v_2(uint8 *out, uint8 *in_near, uint8 * in_far, int w, int hs)
+static uint8* resample_row_v_2(uint8 *out, uint8 *in_near, uint8 * in_far, int w, int /*hs*/)
 {
    // need to generate two samples vertically for every one in input
    int i;
@@ -1599,7 +1599,7 @@ static uint8* resample_row_v_2(uint8 *out, uint8 *in_near, uint8 * in_far, int w
    return out;
 }
 
-static uint8*  resample_row_h_2(uint8 *out, uint8 *in_near, uint8 * in_far, int w, int hs)
+static uint8*  resample_row_h_2(uint8 *out, uint8 *in_near, uint8 * /*in_far*/, int w, int /*hs*/)
 {
    // need to generate two samples horizontally for every one in input
    int i;
@@ -1624,7 +1624,7 @@ static uint8*  resample_row_h_2(uint8 *out, uint8 *in_near, uint8 * in_far, int 
 
 #define div16(x) ((uint8) ((x) >> 4))
 
-static uint8 *resample_row_hv_2(uint8 *out, uint8 *in_near, uint8 *in_far, int w, int hs)
+static uint8 *resample_row_hv_2(uint8 *out, uint8 *in_near, uint8 *in_far, int w, int /*hs*/)
 {
    // need to generate 2x2 samples for every one in input
    int i,t0,t1;
@@ -1645,7 +1645,7 @@ static uint8 *resample_row_hv_2(uint8 *out, uint8 *in_near, uint8 *in_far, int w
    return out;
 }
 
-static uint8 *resample_row_generic(uint8 *out, uint8 *in_near, uint8 * in_far, int w, int hs)
+static uint8 *resample_row_generic(uint8 *out, uint8 *in_near, uint8 * /*in_far*/, int w, int hs)
 {
    // resample with nearest-neighbor
    int i,j;
@@ -2499,7 +2499,7 @@ static int compute_transparency(png *z, uint8 tc[3], int out_n)
    return 1;
 }
 
-static int expand_palette(png *a, uint8 *palette, int len, int pal_img_n)
+static int expand_palette(png *a, uint8 *palette, int /*len*/, int pal_img_n)
 {
    uint32 i, pixel_count = a->s.img_x * a->s.img_y;
    uint8 *p, *temp_out, *orig = a->out;
