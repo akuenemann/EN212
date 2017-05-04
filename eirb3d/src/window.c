@@ -1,4 +1,6 @@
-﻿#include "window.h"
+﻿#include <math.h>
+
+#include "window.h"
 #include "geometry.h"
 #include "model.h"
 #include "vector.h"
@@ -307,10 +309,7 @@ bool c3 = false;
 
 int lumiere[] = {0,0,1};
 
-vec3f_t cote1 = Vec3fSub(*s1,*s2);
-vec3f_t cote2 = Vec3fSub(*s2,*s3);
-
-vec3f_t prod_vect = Vec3fNormalize(Vec3fCross( cote1, cote2 ));
+vec3f_t prod_vect = Vec3fNormalize(Vec3fCross( *s1, *s2 ));
 
 float intensite = prod_vect.x*lumiere[0]+prod_vect.y*lumiere[1]+prod_vect.z*lumiere[2];
 
@@ -318,8 +317,7 @@ float intensite = prod_vect.x*lumiere[0]+prod_vect.y*lumiere[1]+prod_vect.z*lumi
 int couleur_r;
 
 if (intensite < 0){
-	//couleur_r = -intensite*255;
-	return;
+	couleur_r = 0;
 }
 else{
 	couleur_r = intensite*255;
@@ -332,7 +330,6 @@ if (!((x1 == x3) || (y1 == y3))){
 	coef1 = (y3 - y1)/(float)(x3 - x1);
 	offset1 = y1 - coef1 * x1;
 	c1 = true;
-	
 }
 if(!((x2 == x1) || (y2 == y1))){
 	coef2 = (y2 - y1)/(float)(x2 - x1);
