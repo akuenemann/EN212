@@ -2,11 +2,11 @@ TARGET 		= eirb3d
 
 CC 		= g++
 
-CFLAGS 		= -W -Wall -ggdb -g -O0
+CFLAGS 		= -W -Wall 
 
 LINKER 		= g++ -o
 
-LFLAGS 		= -Wall -I. -lm -lSDL2 -ggdb -g -O0
+LFLAGS 		= -Wall -I. -lm -lSDL2 
 
 SRCDIR 		= src
 OBJDIR 		= obj

@@ -6,13 +6,12 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
-
 int main( int argc, char ** argv ) {
 
-	const int width		= 512;
-	const int height	= 512;
+	const int width		= 1024;
+	const int height	= 768;
 
-	bool test = ModelLoad("./bin/data/head.obj");
+	bool test = ModelLoad("./bin/data/body.obj");
 
 	// Ouverture d'une nouvelle fenêtre
 	window_t * mainwindow = WindowInit( width, height, 4 );
@@ -34,17 +33,10 @@ int main( int argc, char ** argv ) {
 
 		// Dessin d'une ligne
 		//for(int i = 0 ; i < 10000 ; i++){
-			//WindowDrawLine( mainwindow, 615, 163, 612, 289, 255, 255, 255);
-			//WindowDrawLine( mainwindow, 265, 315, 612, 289, 255, 255, 255);
-			//WindowDrawLine( mainwindow, 615, 163, 265, 315, 255, 255, 255);
+			//WindowDrawLine( mainwindow, 50, 10, 50, 200, 255, 255, 255);
 		//}
-		for (int i=0 ; i < VectorGetLength( ModelFaces() ); i++){
-			WindowDrawTriangle(mainwindow, i);
-			
-		}
-		SDL_Delay(100);
 		
-		//WindowDrawTriangle(mainwindow, 19);
+		WindowDrawTriangle(mainwindow, 1);
 		
 		// Mise à jour de la fenêtre
 		WindowUpdate( mainwindow );
